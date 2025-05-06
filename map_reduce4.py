@@ -4,7 +4,7 @@
   "metadata": {
     "colab": {
       "provenance": [],
-      "authorship_tag": "ABX9TyP6fq2VuoeIecFf03oOKb0T"
+      "authorship_tag": "ABX9TyM530WdVjgxh1hRXXBOsiv4"
     },
     "kernelspec": {
       "name": "python3",
@@ -26,27 +26,19 @@
         "from __future__ import print_function\n",
         "from mrjob.job import MRJob\n",
         "from mrjob.step import MRStep\n",
-        "\n",
         "class UniqueTagsPerUserPerFilm(MRJob):\n",
-        "\n",
         "    def steps(self):\n",
-        "        return [\n",
-        "            MRStep(mapper=self.mapper_get_user_film_tags,\n",
-        "                   reducer=self.reducer_count_unique_tags)\n",
-        "        ]\n",
-        "\n",
+        "        return [MRStep(mapper=self.mapper_get_user_film_tags,reducer=self.reducer_count_unique_tags)]\n",
         "    def mapper_get_user_film_tags(self, _, line):\n",
         "        try:\n",
-        "            userID, movieID, tag, timestamp = line.strip().split(',')\n",
-        "            key = \"{}_{}\".format(userID, movieID)  # Compatible with Python 2\n",
+        "            userID, movieId, tag, timestamp = line.strip().split(',')\n",
+        "            key = \"{}_{}\".format(userID, movieId)  # Compatible with Python 2\n",
         "            yield key, tag\n",
         "        except ValueError:\n",
         "            pass  # Ignore bad lines\n",
-        "\n",
         "    def reducer_count_unique_tags(self, user_film, tags):\n",
         "        unique_tags = set(tags)\n",
         "        yield user_film, len(unique_tags)\n",
-        "\n",
         "if __name__ == '__main__':\n",
         "    UniqueTagsPerUserPerFilm.run()"
       ]
